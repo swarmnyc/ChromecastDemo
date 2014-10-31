@@ -1,25 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-    <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Play"
-            android:id="@+id/btn_play" android:layout_gravity="center_horizontal"/>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
-    <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Pause"
-            android:id="@+id/btn_pause" android:layout_gravity="center_horizontal"/>
+                  android:orientation="vertical"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent" android:gravity="center">
 
-    <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Stop"
-            android:id="@+id/btn_stop" android:layout_gravity="center_horizontal"/>
-</LinearLayout>
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Default App Demo"
+                style="@style/TextButton"
+                android:id="@+id/btn_start_default" android:layout_gravity="center_horizontal"/>
+
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Styled App Demo"
+                style="@style/TextButton"
+                android:id="@+id/btn_start_styled_receiver" android:layout_gravity="center_horizontal"/>
+
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Custom App Demo"
+                style="@style/TextButton"
+                android:id="@+id/btn_custom_app_demo" android:layout_gravity="center_horizontal"/>
+
+
+    </LinearLayout>
+
+    <FrameLayout
+            android:id="@+id/container_main"
+            android:layout_width="match_parent" android:layout_height="match_parent"/>
+
+</RelativeLayout>

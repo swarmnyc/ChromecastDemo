@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Chrome Cast Demo</string>
     <string name="media_route_menu_title">Cast</string>
+    <string name="start_cast_app">Start Chromecast app</string>
+    <string name="pause">Pause</string>
+    <string name="play">Play</string>
+    <string name="stop_cast_app">Start Chromecast app</string>
 </resources>

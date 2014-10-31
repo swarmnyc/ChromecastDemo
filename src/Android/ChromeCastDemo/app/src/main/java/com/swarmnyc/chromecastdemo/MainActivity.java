@@ -5,6 +5,7 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.MediaRouteActionProvider;
@@ -14,14 +15,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import com.google.android.gms.cast.*;
+import com.google.android.gms.cast.Cast;
+import com.google.android.gms.cast.CastDevice;
+import com.google.android.gms.cast.CastMediaControlIntent;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
-
-import java.io.IOException;
 
 public class MainActivity extends ActionBarActivity
 	implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
@@ -39,7 +38,7 @@ public class MainActivity extends ActionBarActivity
 	/**
 	 * Google API client.
 	 */
-	private GoogleApiClient mGoogleApiClient;
+	private GoogleApiClient m_googleApiClient;
 
 	/**
 	 * Determines if the client is in a resolution state, and
@@ -48,9 +47,8 @@ public class MainActivity extends ActionBarActivity
 	private boolean                                       mIsInResolution;
 	private MediaRouter                                   mMediaRouter;
 	private MediaRouteSelector                            mMediaRouteSelector;
-	private CastDevice                                    mSelectedDevice;
+	private CastDevice                                    m_castDevice;
 	private android.support.v7.media.MediaRouter.Callback mMediaRouterCallback;
-	private RemoteMediaPlayer                             mRemoteMediaPlayer;
 	private boolean                                       mApplicationStarted;
 	private String                                        mSessionId;
 
@@ -65,32 +63,40 @@ public class MainActivity extends ActionBarActivity
 		setContentView( R.layout.activity_main );
 
 
-		findViewById( R.id.btn_play ).setOnClickListener(
+		findViewById( R.id.btn_start_default ).setOnClickListener(
 			new View.OnClickListener()
 			{
 				@Override public void onClick( final View v )
 				{
-					play();
+					final DefaultReceiverFragment fragment = new DefaultReceiverFragment();
+					fragment.setGoogleApiClient( m_googleApiClient );
+					getSupportFragmentManager().beginTransaction()
+					                           .setTransition(
+						                           FragmentTransaction.TRANSIT_FRAGMENT_OPEN
+					                           )
+					                           .add( R.id.container_main, fragment )
+					                           .addToBackStack( "DEFAULT" )
+					                           .commit();
 				}
 			}
 		);
 
-		findViewById( R.id.btn_pause ).setOnClickListener(
+		findViewById( R.id.btn_start_styled_receiver ).setOnClickListener(
 			new View.OnClickListener()
 			{
 				@Override public void onClick( final View v )
 				{
-					pause();
+
 				}
 			}
 		);
 
-		findViewById( R.id.btn_stop ).setOnClickListener(
+		findViewById( R.id.btn_custom_app_demo ).setOnClickListener(
 			new View.OnClickListener()
 			{
 				@Override public void onClick( final View v )
 				{
-					stop();
+
 				}
 			}
 		);
@@ -108,87 +114,9 @@ public class MainActivity extends ActionBarActivity
 
 		mMediaRouterCallback = new MyMediaRouterCallback();
 
-		mRemoteMediaPlayer = new RemoteMediaPlayer();
 
-		mRemoteMediaPlayer.setOnStatusUpdatedListener(
-			new RemoteMediaPlayer.OnStatusUpdatedListener()
-			{
-				@Override
-				public void onStatusUpdated()
-				{
-					MediaStatus mediaStatus = mRemoteMediaPlayer.getMediaStatus();
-					if ( null == mediaStatus )
-					{
-						return;
-					}
-
-
-				}
-			}
-		);
-
-		mRemoteMediaPlayer.setOnMetadataUpdatedListener(
-			new RemoteMediaPlayer.OnMetadataUpdatedListener()
-			{
-				@Override
-				public void onMetadataUpdated()
-				{
-					MediaInfo mediaInfo = mRemoteMediaPlayer.getMediaInfo();
-					//					MediaMetadata metadata = mediaInfo.getMetadata();
-					//					...
-				}
-			}
-		);
 	}
 
-	private void stop()
-	{
-		try
-		{
-			mRemoteMediaPlayer.stop( mGoogleApiClient );
-		}
-		catch ( IOException e )
-		{
-			Log.e( "MainActivity", "Error in stop ([])", e );
-		}
-	}
-
-	private void pause()
-	{
-		mRemoteMediaPlayer.requestStatus( mGoogleApiClient ).setResultCallback(
-			new ResultCallback<RemoteMediaPlayer.MediaChannelResult>()
-			{
-				@Override public void onResult(
-					final RemoteMediaPlayer.MediaChannelResult mediaChannelResult
-				)
-				{
-
-					if (mediaChannelResult.getStatus().isSuccess() )
-					{
-						final MediaStatus mediaStatus = mRemoteMediaPlayer.getMediaStatus();
-
-						try
-						{
-							if ( mediaStatus.getPlayerState() == 0 ) // paused
-							{
-								mRemoteMediaPlayer.play( mGoogleApiClient );
-							}
-							else if ( mediaStatus.getPlayerState() == 0 )
-							{
-
-								mRemoteMediaPlayer.pause( mGoogleApiClient );
-
-							}
-						}
-						catch ( IOException e )
-						{
-							Log.e( "MainActivity", "Error in onStatusUpdated ([])", e );
-						}
-					}
-				}
-			}
-		);
-	}
 
 	@Override
 	public boolean onCreateOptionsMenu( Menu menu )
@@ -198,8 +126,8 @@ public class MainActivity extends ActionBarActivity
 		MenuItem mediaRouteMenuItem = menu.findItem( R.id.media_route_menu_item );
 		MediaRouteActionProvider mediaRouteActionProvider = (MediaRouteActionProvider) MenuItemCompat
 			.getActionProvider(
-			mediaRouteMenuItem
-		);
+				mediaRouteMenuItem
+			);
 		mediaRouteActionProvider.setRouteSelector( mMediaRouteSelector );
 		return true;
 	}
@@ -245,9 +173,9 @@ public class MainActivity extends ActionBarActivity
 	@Override
 	protected void onStop()
 	{
-		if ( mGoogleApiClient != null )
+		if ( m_googleApiClient != null )
 		{
-			mGoogleApiClient.disconnect();
+			m_googleApiClient.disconnect();
 		}
 		super.onStop();
 	}
@@ -280,56 +208,14 @@ public class MainActivity extends ActionBarActivity
 	private void retryConnecting()
 	{
 		mIsInResolution = false;
-		if ( !mGoogleApiClient.isConnecting() )
+		if ( !m_googleApiClient.isConnecting() )
 		{
-			mGoogleApiClient.connect();
+			m_googleApiClient.connect();
 		}
-	}
-
-	public void play()
-	{
-		if ( mGoogleApiClient == null )
-		{
-			Cast.CastOptions.Builder apiOptionsBuilder;
-			apiOptionsBuilder = Cast.CastOptions.builder(
-				mSelectedDevice, new Cast.Listener()
-				{
-					@Override public void onApplicationStatusChanged()
-					{
-						Log.d( "MainActivity", "onApplicationStatusChanged ()" );
-					}
-
-					@Override
-					public void onApplicationDisconnected( final int statusCode )
-					{
-						Log.d(
-							"MainActivity", String.format(
-								"onApplicationDisconnected ([%s])", statusCode
-							)
-						);
-						super.onApplicationDisconnected( statusCode );
-					}
-
-					@Override public void onVolumeChanged()
-					{
-						super.onVolumeChanged();
-					}
-				}
-			).setDebuggingEnabled();
-
-			mGoogleApiClient = new GoogleApiClient.Builder( MainActivity.this ).addApi(
-				Cast.API, apiOptionsBuilder.build()
-			)
-
-				// Optionally, add additional APIs and scopes if required.
-				.addConnectionCallbacks( MainActivity.this ).addOnConnectionFailedListener( MainActivity.this )
-				.build();
-		}
-		mGoogleApiClient.connect();
 	}
 
 	/**
-	 * Called when {@code mGoogleApiClient} is connected.
+	 * Called when {@code m_googleApiClient} is connected.
 	 */
 	@Override
 	public void onConnected( Bundle connectionHint )
@@ -338,99 +224,10 @@ public class MainActivity extends ActionBarActivity
 		// TODO: Start making API requests.
 
 
-		Cast.CastApi.launchApplication(
-			mGoogleApiClient, CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID, false
-		).setResultCallback(
-			new ResultCallback<Cast.ApplicationConnectionResult>()
-			{
-				@Override
-				public void onResult( Cast.ApplicationConnectionResult result )
-				{
-					Status status = result.getStatus();
-					if ( status.isSuccess() )
-					{
-						ApplicationMetadata applicationMetadata = result.getApplicationMetadata();
-						String sessionId = result.getSessionId();
-						String applicationStatus = result.getApplicationStatus();
-						boolean wasLaunched = result.getWasLaunched();
-
-						mApplicationStarted = true;
-
-						try
-						{
-							Cast.CastApi.setMessageReceivedCallbacks(
-								mGoogleApiClient, mRemoteMediaPlayer.getNamespace(), mRemoteMediaPlayer
-							);
-						}
-						catch ( IOException e )
-						{
-							Log.e( TAG, "Exception while creating media channel", e );
-						}
-
-						mRemoteMediaPlayer.requestStatus( mGoogleApiClient ).setResultCallback(
-							new ResultCallback<RemoteMediaPlayer.MediaChannelResult>()
-							{
-								@Override
-								public void onResult( RemoteMediaPlayer.MediaChannelResult result )
-								{
-									if ( !result.getStatus().isSuccess() )
-									{
-										Log.e( TAG, "Failed to request status." );
-									}
-
-									MediaMetadata mediaMetadata = new MediaMetadata( MediaMetadata.MEDIA_TYPE_MOVIE );
-									mediaMetadata.putString( MediaMetadata.KEY_TITLE, "Somya's video" );
-									MediaInfo mediaInfo = new MediaInfo.Builder(
-										"http://distribution.bbb3d.renderfarming" +
-										".net/video/mp4/bbb_sunflower_1080p_30fps_normal.mp4"
-									).setContentType( "video/mp4" )
-									 .setStreamType( MediaInfo.STREAM_TYPE_BUFFERED )
-									 .setMetadata(
-										 mediaMetadata
-									 )
-									 .build();
-									try
-									{
-										mRemoteMediaPlayer.load( mGoogleApiClient, mediaInfo, true ).setResultCallback(
-											new ResultCallback<RemoteMediaPlayer.MediaChannelResult>()
-											{
-												@Override
-												public void onResult( RemoteMediaPlayer.MediaChannelResult result )
-												{
-													if ( result.getStatus().isSuccess() )
-													{
-														Log.d( TAG, "Media loaded successfully" );
-													}
-													else
-													{
-														Log.d( TAG, "Media load failed" );
-													}
-												}
-											}
-										);
-									}
-									catch ( IllegalStateException e )
-									{
-										Log.e( TAG, "Problem occurred with media during loading", e );
-									}
-									catch ( Exception e )
-									{
-										Log.e( TAG, "Problem opening media during loading", e );
-									}
-								}
-							}
-						);
-
-					}
-				}
-			}
-		);
-
-
 	}
 
 	/**
-	 * Called when {@code mGoogleApiClient} connection is suspended.
+	 * Called when {@code m_googleApiClient} connection is suspended.
 	 */
 	@Override
 	public void onConnectionSuspended( int cause )
@@ -440,7 +237,7 @@ public class MainActivity extends ActionBarActivity
 	}
 
 	/**
-	 * Called when {@code mGoogleApiClient} is trying to connect but failed.
+	 * Called when {@code m_googleApiClient} is trying to connect but failed.
 	 * Handle {@code result.getResolution()} if there is a resolution
 	 * available.
 	 */
@@ -482,28 +279,75 @@ public class MainActivity extends ActionBarActivity
 		}
 	}
 
+	public void connect()
+	{
+		if ( m_googleApiClient == null )
+		{
+			Cast.CastOptions.Builder apiOptionsBuilder;
+			apiOptionsBuilder = Cast.CastOptions.builder(
+				m_castDevice, new Cast.Listener()
+				{
+					@Override public void onApplicationStatusChanged()
+					{
+						Log.d( "MainActivity", "onApplicationStatusChanged ()" );
+					}
+
+					@Override
+					public void onApplicationDisconnected( final int statusCode )
+					{
+						Log.d(
+							"MainActivity", String.format(
+								"onApplicationDisconnected ([%s])", statusCode
+							)
+						);
+						super.onApplicationDisconnected( statusCode );
+					}
+
+					@Override public void onVolumeChanged()
+					{
+						super.onVolumeChanged();
+					}
+				}
+			).setDebuggingEnabled();
+
+			m_googleApiClient = new GoogleApiClient.Builder( MainActivity.this ).addApi(
+				Cast.API, apiOptionsBuilder.build()
+			)
+
+				// Optionally, add additional APIs and scopes if required.
+				.addConnectionCallbacks( MainActivity.this ).addOnConnectionFailedListener( MainActivity.this )
+				.build();
+		}
+		m_googleApiClient.connect();
+	}
+
 	private void teardown()
 	{
 		Log.d( TAG, "teardown" );
-		if ( mGoogleApiClient != null )
+		if ( m_googleApiClient != null )
 		{
 			if ( mApplicationStarted )
 			{
-				if ( mGoogleApiClient.isConnected() || mGoogleApiClient.isConnecting() )
+				if ( m_googleApiClient.isConnected() || m_googleApiClient.isConnecting() )
 				{
 
-					Cast.CastApi.stopApplication( mGoogleApiClient, mSessionId );
+					Cast.CastApi.stopApplication( m_googleApiClient, mSessionId );
 
 
-					mGoogleApiClient.disconnect();
+					m_googleApiClient.disconnect();
 				}
 				mApplicationStarted = false;
 			}
-			mGoogleApiClient = null;
+			m_googleApiClient = null;
 		}
-		mSelectedDevice = null;
+		m_castDevice = null;
 		//		mWaitingForReconnect = false;
 		mSessionId = null;
+	}
+
+	public CastDevice getCastDevice()
+	{
+		return m_castDevice;
 	}
 
 	private class MyMediaRouterCallback extends MediaRouter.Callback
@@ -513,18 +357,18 @@ public class MainActivity extends ActionBarActivity
 		public void onRouteSelected( MediaRouter router, MediaRouter.RouteInfo info )
 		{
 
-			mSelectedDevice = CastDevice.getFromBundle( info.getExtras() );
+			m_castDevice = CastDevice.getFromBundle( info.getExtras() );
 			String routeId = info.getId();
 			Log.d( "MainActivity", String.format( "onRouteSelected : routeId = %s", routeId ) );
 
-
+			connect();
 		}
 
 		@Override
 		public void onRouteUnselected( MediaRouter router, MediaRouter.RouteInfo info )
 		{
 			teardown();
-			mSelectedDevice = null;
+			m_castDevice = null;
 		}
 
 		@Override public void onRouteAdded(
