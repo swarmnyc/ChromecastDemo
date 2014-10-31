@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Chrome Cast Demo</string>
+    <string name="media_route_menu_title">Cast</string>
+</resources>
