@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="app_name">Xamarin Cast Demo</string>
+
+    <string name="media_route_menu_title">Cast</string>
+
+     <string name="start_cast_app">Start Chromecast app</string>
+    <string name="pause">Pause</string>
+    <string name="play">Play</string>
+    <string name="stop_cast_app">Stop Chromecast app</string>
+</resources>
