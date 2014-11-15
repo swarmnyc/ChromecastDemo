@@ -96,7 +96,11 @@ public class MainActivity extends ActionBarActivity
 			{
 				@Override public void onClick( final View v )
 				{
-
+					final FragmentCustomReceiver fragment = new FragmentCustomReceiver();
+					fragment.setGoogleApiClient( m_googleApiClient );
+					getSupportFragmentManager().beginTransaction().setTransition(
+						FragmentTransaction.TRANSIT_FRAGMENT_OPEN
+					).add( R.id.container_main, fragment ).addToBackStack( "CUSTOM" ).commit();
 				}
 			}
 		);
