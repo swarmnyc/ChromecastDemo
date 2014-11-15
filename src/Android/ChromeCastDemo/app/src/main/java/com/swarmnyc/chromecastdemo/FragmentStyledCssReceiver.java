@@ -17,17 +17,15 @@ import java.io.IOException;
 /**
  * Created by somya on 10/31/14.
  */
-public class FragmentDefaultReceiver extends Fragment
+public class FragmentStyledCssReceiver extends Fragment
 {
 
-	public static final String VIDEO_URL = "http://distribution.bbb3d.renderfarming"
-	                                       + ".net/video/mp4/bbb_sunflower_1080p_30fps_normal.mp4";
-	private Button                                            m_startAppButton;
-	private Button                                            m_pausePlayButton;
-	private Button                                            m_stopAppButton;
-	private RemoteMediaPlayer                                 mRemoteMediaPlayer;
-	private boolean                                           mApplicationStarted;
-	private com.google.android.gms.common.api.GoogleApiClient m_googleApiClient;
+	private Button            m_startAppButton;
+	private Button            m_pausePlayButton;
+	private Button            m_stopAppButton;
+	private RemoteMediaPlayer mRemoteMediaPlayer;
+	private boolean           mApplicationStarted;
+	private GoogleApiClient   m_googleApiClient;
 	private String TAG = "DefaultReceiverFragment";
 
 
@@ -50,24 +48,30 @@ public class FragmentDefaultReceiver extends Fragment
 			{
 				@Override public void onClick( final View v )
 				{
-					startDefaultReciever();
+					startStyledReciever();
 				}
 			}
 		);
 
-		m_pausePlayButton.setOnClickListener( new View.OnClickListener() {
-			                                      @Override public void onClick( final View v )
-			                                      {
-				                                      pauseOrPlay();
-			                                      }
-		                                      } );
+		m_pausePlayButton.setOnClickListener(
+			new View.OnClickListener()
+			{
+				@Override public void onClick( final View v )
+				{
+					pauseOrPlay();
+				}
+			}
+		);
 
-		m_stopAppButton.setOnClickListener( new View.OnClickListener() {
-			                                    @Override public void onClick( final View v )
-			                                    {
-				                                    stopMedia();
-			                                    }
-		                                    } );
+		m_stopAppButton.setOnClickListener(
+			new View.OnClickListener()
+			{
+				@Override public void onClick( final View v )
+				{
+					stopMedia();
+				}
+			}
+		);
 
 		mRemoteMediaPlayer = new RemoteMediaPlayer();
 
@@ -105,7 +109,7 @@ public class FragmentDefaultReceiver extends Fragment
 	private void stopMedia()
 	{
 
-			mRemoteMediaPlayer.stop( m_googleApiClient );
+		mRemoteMediaPlayer.stop( m_googleApiClient );
 	}
 
 	private void pauseOrPlay()
@@ -141,11 +145,11 @@ public class FragmentDefaultReceiver extends Fragment
 	}
 
 
-	public void startDefaultReciever()
+	public void startStyledReciever()
 	{
 
 		Cast.CastApi.launchApplication(
-			m_googleApiClient, CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID, false
+			m_googleApiClient, "F7C9F7B8", false
 		).setResultCallback(
 			new ResultCallback<Cast.ApplicationConnectionResult>()
 			{
@@ -185,9 +189,10 @@ public class FragmentDefaultReceiver extends Fragment
 									}
 
 									MediaMetadata mediaMetadata = new MediaMetadata( MediaMetadata.MEDIA_TYPE_MOVIE );
-									mediaMetadata.putString( MediaMetadata.KEY_TITLE, "Default video" );
+									mediaMetadata.putString( MediaMetadata.KEY_TITLE, "Styled video Demo" );
 									MediaInfo mediaInfo = new MediaInfo.Builder(
-										VIDEO_URL
+										"http://distribution.bbb3d.renderfarming"
+										+ ".net/video/mp4/bbb_sunflower_1080p_30fps_normal.mp4"
 									).setContentType( "video/mp4" )
 									 .setStreamType( MediaInfo.STREAM_TYPE_BUFFERED )
 									 .setMetadata(
@@ -196,8 +201,9 @@ public class FragmentDefaultReceiver extends Fragment
 									 .build();
 									try
 									{
-										mRemoteMediaPlayer.load( m_googleApiClient, mediaInfo,
-										                         true ).setResultCallback(
+										mRemoteMediaPlayer.load(
+											m_googleApiClient, mediaInfo, true
+										).setResultCallback(
 											new ResultCallback<RemoteMediaPlayer.MediaChannelResult>()
 											{
 												@Override

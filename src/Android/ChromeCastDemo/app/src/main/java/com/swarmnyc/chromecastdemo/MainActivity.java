@@ -70,13 +70,9 @@ public class MainActivity extends ActionBarActivity
 				{
 					final FragmentDefaultReceiver fragment = new FragmentDefaultReceiver();
 					fragment.setGoogleApiClient( m_googleApiClient );
-					getSupportFragmentManager().beginTransaction()
-					                           .setTransition(
-						                           FragmentTransaction.TRANSIT_FRAGMENT_OPEN
-					                           )
-					                           .add( R.id.container_main, fragment )
-					                           .addToBackStack( "DEFAULT" )
-					                           .commit();
+					getSupportFragmentManager().beginTransaction().setTransition(
+						FragmentTransaction.TRANSIT_FRAGMENT_OPEN
+					).add( R.id.container_main, fragment ).addToBackStack( "DEFAULT" ).commit();
 				}
 			}
 		);
@@ -86,7 +82,11 @@ public class MainActivity extends ActionBarActivity
 			{
 				@Override public void onClick( final View v )
 				{
-
+					final FragmentStyledCssReceiver fragment = new FragmentStyledCssReceiver();
+					fragment.setGoogleApiClient( m_googleApiClient );
+					getSupportFragmentManager().beginTransaction().setTransition(
+						FragmentTransaction.TRANSIT_FRAGMENT_OPEN
+					).add( R.id.container_main, fragment ).addToBackStack( "STYLED_CSS" ).commit();
 				}
 			}
 		);
