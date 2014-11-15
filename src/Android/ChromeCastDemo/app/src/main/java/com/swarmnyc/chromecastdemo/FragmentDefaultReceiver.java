@@ -17,7 +17,7 @@ import java.io.IOException;
 /**
  * Created by somya on 10/31/14.
  */
-public class DefaultReceiverFragment extends Fragment
+public class FragmentDefaultReceiver extends Fragment
 {
 
 	private Button                                              m_startAppButton;
@@ -102,15 +102,8 @@ public class DefaultReceiverFragment extends Fragment
 
 	private void stopMedia()
 	{
-		try
-		{
 
 			mRemoteMediaPlayer.stop( m_googleApiClient );
-		}
-		catch ( IOException e )
-		{
-			Log.e( "MainActivity", "Error in stopMedia ([])", e );
-		}
 	}
 
 	private void pauseOrPlay()
@@ -127,24 +120,17 @@ public class DefaultReceiverFragment extends Fragment
 					{
 						final MediaStatus mediaStatus = mRemoteMediaPlayer.getMediaStatus();
 
-						try
+						if ( mediaStatus.getPlayerState() == MediaStatus.PLAYER_STATE_PAUSED ) // paused
 						{
-							if ( mediaStatus.getPlayerState() == MediaStatus.PLAYER_STATE_PAUSED ) // paused
-							{
-								mRemoteMediaPlayer.play( m_googleApiClient );
-								m_pausePlayButton.setText( R.string.pause );
-							}
-							else if ( mediaStatus.getPlayerState() == MediaStatus.PLAYER_STATE_PLAYING )
-							{
-
-								mRemoteMediaPlayer.pause( m_googleApiClient );
-								m_pausePlayButton.setText( R.string.play );
-
-							}
+							mRemoteMediaPlayer.play( m_googleApiClient );
+							m_pausePlayButton.setText( R.string.pause );
 						}
-						catch ( IOException e )
+						else if ( mediaStatus.getPlayerState() == MediaStatus.PLAYER_STATE_PLAYING )
 						{
-							Log.e( "MainActivity", "Error in onStatusUpdated ([])", e );
+
+							mRemoteMediaPlayer.pause( m_googleApiClient );
+							m_pausePlayButton.setText( R.string.play );
+
 						}
 					}
 				}

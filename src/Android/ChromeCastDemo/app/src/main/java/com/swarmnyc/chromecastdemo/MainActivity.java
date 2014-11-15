@@ -68,7 +68,7 @@ public class MainActivity extends ActionBarActivity
 			{
 				@Override public void onClick( final View v )
 				{
-					final DefaultReceiverFragment fragment = new DefaultReceiverFragment();
+					final FragmentDefaultReceiver fragment = new FragmentDefaultReceiver();
 					fragment.setGoogleApiClient( m_googleApiClient );
 					getSupportFragmentManager().beginTransaction()
 					                           .setTransition(
@@ -308,7 +308,7 @@ public class MainActivity extends ActionBarActivity
 						super.onVolumeChanged();
 					}
 				}
-			).setDebuggingEnabled();
+			).setVerboseLoggingEnabled( true );
 
 			m_googleApiClient = new GoogleApiClient.Builder( MainActivity.this ).addApi(
 				Cast.API, apiOptionsBuilder.build()
