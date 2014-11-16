@@ -104,6 +104,21 @@ public class MainActivity extends ActionBarActivity
 				}
 			}
 		);
+
+		findViewById( R.id.btn_tic_tac_toe_app_demo ).setOnClickListener(
+			new View.OnClickListener()
+			{
+				@Override public void onClick( final View v )
+				{
+					final FragmentTicTacToeSender fragment = new FragmentTicTacToeSender();
+					fragment.setGoogleApiClient( m_googleApiClient );
+					getSupportFragmentManager().beginTransaction().setTransition(
+						FragmentTransaction.TRANSIT_FRAGMENT_OPEN
+					).add( R.id.container_main, fragment ).addToBackStack( "TIC_TAC_TOE" ).commit();
+				}
+			}
+		);
+
 		if ( savedInstanceState != null )
 		{
 			mIsInResolution = savedInstanceState.getBoolean( KEY_IN_RESOLUTION, false );

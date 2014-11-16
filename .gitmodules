@@ -1,0 +1,3 @@
+[submodule "src/Android/TicTacToe"]
+	path = src/Android/TicTacToe
+	url = git@github.com:somya/cast-android-tictactoe.git

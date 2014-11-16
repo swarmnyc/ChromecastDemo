@@ -5,4 +5,22 @@
     <string name="pause">Pause</string>
     <string name="play">Play</string>
     <string name="stop_cast_app">Stop Chromecast app</string>
+
+    <string name="tie">Tied game! No one wins!</string>
+    <string name="player_turn">It is player <b>%s</b>\'s turn.</string>
+    <string name="player_wins">Player %s wins!</string>
+    <string name="player_name">You are player <b>%s</b></string>
+    <string name="play_again">Play Again</string>
+    <string name="waiting_for_player_assignment">Waiting for the other player</string>
+    <string name="abandoned">The other player chickened out.</string>
+    <string name="other_players_abandoned">One of the other playes chickened out.</string>
+    <string name="full_game">Game is full.</string>
+    <string name="observing">You are observing the game.</string>
+    <string name="error">Error</string>
+    <string name="leave">Leave</string>
+    <string name="ok">OK</string>
+    <string name="game_over">Game Over</string>
+    <!--<string name="media_route_menu_title">Play on&#8230;</string>-->
+    <string name="select_device_text">Select device to start the game.</string>
+    <string name="join_game">Join the Game</string>
 </resources>

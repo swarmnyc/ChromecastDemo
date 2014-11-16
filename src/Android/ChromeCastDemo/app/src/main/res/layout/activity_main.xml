@@ -32,6 +32,14 @@
                 android:id="@+id/btn_custom_app_demo" android:layout_gravity="center_horizontal"/>
 
 
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tic Tac Toe Demo"
+                style="@style/TextButton"
+                android:id="@+id/btn_tic_tac_toe_app_demo" android:layout_gravity="center_horizontal"/>
+
+
     </LinearLayout>
 
     <FrameLayout
