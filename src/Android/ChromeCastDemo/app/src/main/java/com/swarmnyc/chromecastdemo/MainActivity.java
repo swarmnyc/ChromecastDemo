@@ -141,13 +141,13 @@ public class MainActivity extends ActionBarActivity
 	public boolean onCreateOptionsMenu( Menu menu )
 	{
 		super.onCreateOptionsMenu( menu );
+
 		getMenuInflater().inflate( R.menu.main, menu );
 		MenuItem mediaRouteMenuItem = menu.findItem( R.id.media_route_menu_item );
 		MediaRouteActionProvider mediaRouteActionProvider = (MediaRouteActionProvider) MenuItemCompat
-			.getActionProvider(
-				mediaRouteMenuItem
-			);
+			.getActionProvider(mediaRouteMenuItem);
 		mediaRouteActionProvider.setRouteSelector( mMediaRouteSelector );
+
 		return true;
 	}
 

@@ -20,7 +20,7 @@ import java.io.IOException;
 public class FragmentCustomReceiver extends Fragment
 {
 
-	public static final String RECEIVER_ID = "F650276D";
+	public static final String APP_ID = "F650276D";
 	private Button            m_startAppButton;
 	private Button            m_pausePlayButton;
 	private Button            m_stopAppButton;
@@ -150,7 +150,7 @@ public class FragmentCustomReceiver extends Fragment
 	{
 
 		Cast.CastApi.launchApplication(
-			m_googleApiClient, RECEIVER_ID, false
+			m_googleApiClient, APP_ID, false
 		).setResultCallback(
 			new ResultCallback<Cast.ApplicationConnectionResult>()
 			{
@@ -190,16 +190,17 @@ public class FragmentCustomReceiver extends Fragment
 									}
 
 									MediaMetadata mediaMetadata = new MediaMetadata( MediaMetadata.MEDIA_TYPE_MOVIE );
+
 									mediaMetadata.putString( MediaMetadata.KEY_TITLE, "Styled video Demo" );
+
 									MediaInfo mediaInfo = new MediaInfo.Builder(
 										"http://distribution.bbb3d.renderfarming"
 										+ ".net/video/mp4/bbb_sunflower_1080p_30fps_normal.mp4"
 									).setContentType( "video/mp4" )
 									 .setStreamType( MediaInfo.STREAM_TYPE_BUFFERED )
-									 .setMetadata(
-										 mediaMetadata
-									 )
+									 .setMetadata(mediaMetadata)
 									 .build();
+
 									try
 									{
 										mRemoteMediaPlayer.load(

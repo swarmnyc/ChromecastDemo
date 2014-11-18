@@ -42,23 +42,19 @@ namespace ChromecastDemo.iOS
 			this.NavigationItem.RightBarButtonItem = new UIBarButtonItem( UIImage.FromFile( "Images/cast_solid_black.png" ), UIBarButtonItemStyle.Plain,  
 				(s, e ) =>
 				{
-					UIActionSheet sheet = new UIActionSheet( "Select Device" );
+UIActionSheet sheet = new UIActionSheet( "Select Device" );
 
-					foreach( GCKDevice device in deviceScanner.Devices )
-					{
-						sheet.AddButton( device.FriendlyName );
-					}
+foreach( GCKDevice device in deviceScanner.Devices )
+{
+	sheet.AddButton( device.FriendlyName );
+}
 
-					sheet.ShowInView( this.View );
-					sheet.Clicked += (object sender, UIButtonEventArgs ea ) =>
-					{
-					     appDelegate.SelectedDevice = deviceScanner.Devices[ea.ButtonIndex];
-
-				
-					};
-
-
-
+sheet.ShowInView( this.View );
+sheet.Clicked += (object sender, UIButtonEventArgs ea ) =>
+{
+     appDelegate.SelectedDevice = deviceScanner.Devices[ea.ButtonIndex];
+};
+					
 				} );
 		}
 
