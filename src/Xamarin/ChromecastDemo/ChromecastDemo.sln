@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChromecastDemo.Droid", "Chr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChromecastDemo.iOS", "ChromecastDemo.iOS\ChromecastDemo.iOS.csproj", "{F0DC4EB8-FCA4-42C3-995E-6EBFF693472A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChromecastDemo.iOSClassic", "ChromecastDemo.iOSClassic\ChromecastDemo.iOSClassic.csproj", "{DE33F9B7-2B45-42E7-97DF-67D9DCE66647}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,22 @@ Global
 		{993FEB8E-3509-4EB4-A055-3694722AAC63}.Release|iPhone.Build.0 = Release|Any CPU
 		{993FEB8E-3509-4EB4-A055-3694722AAC63}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 		{993FEB8E-3509-4EB4-A055-3694722AAC63}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{DE33F9B7-2B45-42E7-97DF-67D9DCE66647}.Ad-Hoc|iPhone.ActiveCfg = Ad-Hoc|iPhone
+		{DE33F9B7-2B45-42E7-97DF-67D9DCE66647}.Ad-Hoc|iPhone.Build.0 = Ad-Hoc|iPhone
+		{DE33F9B7-2B45-42E7-97DF-67D9DCE66647}.AppStore|iPhone.ActiveCfg = AppStore|iPhone
+		{DE33F9B7-2B45-42E7-97DF-67D9DCE66647}.AppStore|iPhone.Build.0 = AppStore|iPhone
+		{DE33F9B7-2B45-42E7-97DF-67D9DCE66647}.Debug|Any CPU.ActiveCfg = Debug|iPhoneSimulator
+		{DE33F9B7-2B45-42E7-97DF-67D9DCE66647}.Debug|Any CPU.Build.0 = Debug|iPhoneSimulator
+		{DE33F9B7-2B45-42E7-97DF-67D9DCE66647}.Debug|iPhone.ActiveCfg = Debug|iPhone
+		{DE33F9B7-2B45-42E7-97DF-67D9DCE66647}.Debug|iPhone.Build.0 = Debug|iPhone
+		{DE33F9B7-2B45-42E7-97DF-67D9DCE66647}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
+		{DE33F9B7-2B45-42E7-97DF-67D9DCE66647}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
+		{DE33F9B7-2B45-42E7-97DF-67D9DCE66647}.Release|Any CPU.ActiveCfg = Release|iPhoneSimulator
+		{DE33F9B7-2B45-42E7-97DF-67D9DCE66647}.Release|Any CPU.Build.0 = Release|iPhoneSimulator
+		{DE33F9B7-2B45-42E7-97DF-67D9DCE66647}.Release|iPhone.ActiveCfg = Release|iPhone
+		{DE33F9B7-2B45-42E7-97DF-67D9DCE66647}.Release|iPhone.Build.0 = Release|iPhone
+		{DE33F9B7-2B45-42E7-97DF-67D9DCE66647}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
+		{DE33F9B7-2B45-42E7-97DF-67D9DCE66647}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
 		{F0DC4EB8-FCA4-42C3-995E-6EBFF693472A}.Ad-Hoc|iPhone.ActiveCfg = Ad-Hoc|iPhone
 		{F0DC4EB8-FCA4-42C3-995E-6EBFF693472A}.Ad-Hoc|iPhone.Build.0 = Ad-Hoc|iPhone
 		{F0DC4EB8-FCA4-42C3-995E-6EBFF693472A}.AppStore|iPhone.ActiveCfg = AppStore|iPhone
@@ -51,6 +69,6 @@ Global
 		{F0DC4EB8-FCA4-42C3-995E-6EBFF693472A}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = ChromecastDemo.iOS\ChromecastDemo.iOS.csproj
+		StartupItem = ChromecastDemo.iOSClassic\ChromecastDemo.iOSClassic.csproj
 	EndGlobalSection
 EndGlobal

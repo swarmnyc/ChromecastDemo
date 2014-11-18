@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 
-using Foundation;
-using UIKit;
+using MonoTouch.Foundation;
+using MonoTouch.UIKit;
+using GoogleCast;
 
-namespace ChromecastDemo.iOS
+namespace ChromecastDemo.iOSClassic
 {
 	// The UIApplicationDelegate for the application. This class is responsible for launching the
 	// User Interface of the application, as well as listening (and optionally responding) to
@@ -21,9 +22,31 @@ namespace ChromecastDemo.iOS
 			set;
 		}
 
+		public GCKDeviceScanner DeviceScanner
+		{
+			get;
+			set;
+		}
+
+		public GCKDevice SelectedDevice
+		{
+			get;
+			set;
+		}
+
 		public override bool FinishedLaunching(UIApplication application, NSDictionary launchOptions)
 		{
-			throw new System.NotImplementedException ();
+			StartScanning();
+			return true;
+		}
+		void StartScanning ()
+		{
+			// Initialize the device scanner
+			DeviceScanner = new GCKDeviceScanner ();
+			// DeviceScannerListener class implements the interface `IGCKDeviceScannerListener`
+			DeviceScanner.AddListener (new DeviceScannerListener ());
+			// Start scanning for deviced
+			DeviceScanner.StartScan();
 		}
 
 
@@ -48,6 +71,22 @@ namespace ChromecastDemo.iOS
 		// This method is called when the application is about to terminate. Save data, if needed.
 		public override void WillTerminate( UIApplication application )
 		{
+		}
+
+		public class DeviceScannerListener : NSObject, IGCKDeviceScannerListener
+		{
+			[Export ("deviceDidComeOnline:")]
+			public void DeviceDidComeOnline (GCKDevice device)
+			{
+				Console.WriteLine ("Device found: {0}", device.FriendlyName);
+				NSNotificationCenter.DefaultCenter.PostNotification( NSNotification.FromName("DEVICE_ONLINE", device));
+			}
+
+			[Export ("deviceDidGoOffline:")]
+			public void DeviceDidGoOffline (GoogleCast.GCKDevice device)
+			{
+				Console.WriteLine ("Device disappeared: {0}", device.FriendlyName);
+			}
 		}
 	}
 }
