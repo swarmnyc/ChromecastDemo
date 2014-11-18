@@ -35,6 +35,11 @@ namespace ChromecastDemo.iOSClassic
 			deviceManager.LaunchApplication(appId);
 		}
 
+		public void AddChannel(GCKCastChannel channel)
+		{
+			deviceManager.AddChannel( channel );
+		}
+
 
 		public void TooglePlayPause(UIButton toggleButton )
 		{
@@ -90,8 +95,8 @@ namespace ChromecastDemo.iOSClassic
 				deviceManager.AddChannel (mediaControlChannel);
 
 				var metadata = new GCKMediaMetadata ();
-				metadata.SetString ("The Cat", GCKMetadataKey.Title);
-				metadata.SetString ("soft kitty, warm kitty, little ball of fur sleepy kitty, happy kitty, purr, purr, purr.", GCKMetadataKey.Subtitle);
+				metadata.SetString ("TEST VIDEO TITLE", GCKMetadataKey.Title);
+				metadata.SetString ("This is the sub title.", GCKMetadataKey.Subtitle);
 				metadata.AddImage (new GCKImage (new NSUrl ("http://placekitten.com/480/360"), 480, 360));
 
 				// define Media information
@@ -101,6 +106,7 @@ namespace ChromecastDemo.iOSClassic
 				// cast video
 				mediaControlChannel.LoadMedia (mediaInformation, true, 0);
 			}
+
 
 			public override void DidDisconnect(GCKDeviceManager deviceManager, NSError error)
 			{
