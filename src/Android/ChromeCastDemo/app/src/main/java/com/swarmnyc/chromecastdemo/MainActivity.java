@@ -21,6 +21,7 @@ import com.google.android.gms.cast.CastMediaControlIntent;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.cast.samples.tictactoe.GameActivity;
 
 public class MainActivity extends ActionBarActivity
 	implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
@@ -110,11 +111,13 @@ public class MainActivity extends ActionBarActivity
 			{
 				@Override public void onClick( final View v )
 				{
-					final FragmentTicTacToeSender fragment = new FragmentTicTacToeSender();
-					fragment.setGoogleApiClient( m_googleApiClient );
-					getSupportFragmentManager().beginTransaction().setTransition(
-						FragmentTransaction.TRANSIT_FRAGMENT_OPEN
-					).add( R.id.container_main, fragment ).addToBackStack( "TIC_TAC_TOE" ).commit();
+//					final FragmentTicTacToeSender fragment = new FragmentTicTacToeSender();
+//					fragment.setGoogleApiClient( m_googleApiClient );
+//					getSupportFragmentManager().beginTransaction().setTransition(
+//						FragmentTransaction.TRANSIT_FRAGMENT_OPEN
+//					).add( R.id.container_main, fragment ).addToBackStack( "TIC_TAC_TOE" ).commit();
+
+					startActivity( new Intent( MainActivity.this, GameActivity.class ) );
 				}
 			}
 		);
