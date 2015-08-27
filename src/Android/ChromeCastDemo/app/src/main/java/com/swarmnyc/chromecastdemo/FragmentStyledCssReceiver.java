@@ -20,23 +20,27 @@ import java.io.IOException;
 public class FragmentStyledCssReceiver extends Fragment
 {
 
+	public static final String APP_ID = "F7C9F7B8";
 	private Button            m_startAppButton;
 	private Button            m_pausePlayButton;
 	private Button            m_stopAppButton;
 	private RemoteMediaPlayer mRemoteMediaPlayer;
 	private boolean           mApplicationStarted;
 	private GoogleApiClient   m_googleApiClient;
-	private String TAG = "DefaultReceiverFragment";
+	private String            TAG = "DefaultReceiverFragment";
+	private String m_sessionId;
 
 
-	@Override public View onCreateView(
+	@Override
+	public View onCreateView(
 		final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState
 	)
 	{
 		return inflater.inflate( R.layout.fragment_default, container, false );
 	}
 
-	@Override public void onViewCreated( final View view, final Bundle savedInstanceState )
+	@Override
+	public void onViewCreated( final View view, final Bundle savedInstanceState )
 	{
 		m_startAppButton = (Button) view.findViewById( R.id.btn_start_app );
 		m_pausePlayButton = (Button) view.findViewById( R.id.btn_pause_play );
@@ -109,7 +113,10 @@ public class FragmentStyledCssReceiver extends Fragment
 	private void stopMedia()
 	{
 
-		mRemoteMediaPlayer.stop( m_googleApiClient );
+//		mRemoteMediaPlayer.stop( m_googleApiClient );
+		Cast.CastApi.stopApplication(
+			m_googleApiClient, m_sessionId
+		);
 	}
 
 	private void pauseOrPlay()
@@ -149,7 +156,7 @@ public class FragmentStyledCssReceiver extends Fragment
 	{
 
 		Cast.CastApi.launchApplication(
-			m_googleApiClient, "F7C9F7B8", false
+			m_googleApiClient, APP_ID, false
 		).setResultCallback(
 			new ResultCallback<Cast.ApplicationConnectionResult>()
 			{
@@ -160,7 +167,7 @@ public class FragmentStyledCssReceiver extends Fragment
 					if ( status.isSuccess() )
 					{
 						ApplicationMetadata applicationMetadata = result.getApplicationMetadata();
-						String sessionId = result.getSessionId();
+						m_sessionId = result.getSessionId();
 						String applicationStatus = result.getApplicationStatus();
 						boolean wasLaunched = result.getWasLaunched();
 

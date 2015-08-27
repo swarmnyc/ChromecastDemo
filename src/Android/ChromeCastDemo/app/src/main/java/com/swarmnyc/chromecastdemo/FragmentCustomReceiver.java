@@ -21,6 +21,8 @@ public class FragmentCustomReceiver extends Fragment
 {
 
 	public static final String APP_ID = "F650276D";
+	public static final String URL = "http://distribution.bbb3d.renderfarming"
+	                                 + ".net/video/mp4/bbb_sunflower_1080p_30fps_normal.mp4";
 	private Button            m_startAppButton;
 	private Button            m_pausePlayButton;
 	private Button            m_stopAppButton;
@@ -110,7 +112,10 @@ public class FragmentCustomReceiver extends Fragment
 	private void stopMedia()
 	{
 
-		mRemoteMediaPlayer.stop( m_googleApiClient );
+//		mRemoteMediaPlayer.stop( m_googleApiClient );
+		Cast.CastApi.stopApplication(
+			m_googleApiClient
+		);
 	}
 
 	private void pauseOrPlay()
@@ -194,8 +199,7 @@ public class FragmentCustomReceiver extends Fragment
 									mediaMetadata.putString( MediaMetadata.KEY_TITLE, "Styled video Demo" );
 
 									MediaInfo mediaInfo = new MediaInfo.Builder(
-										"http://distribution.bbb3d.renderfarming"
-										+ ".net/video/mp4/bbb_sunflower_1080p_30fps_normal.mp4"
+										URL
 									).setContentType( "video/mp4" )
 									 .setStreamType( MediaInfo.STREAM_TYPE_BUFFERED )
 									 .setMetadata(mediaMetadata)

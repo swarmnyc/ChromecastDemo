@@ -20,8 +20,8 @@ import java.io.IOException;
 public class FragmentDefaultReceiver extends Fragment
 {
 
-	public static final String VIDEO_URL = "http://distribution.bbb3d.renderfarming"
-	                                       + ".net/video/mp4/bbb_sunflower_1080p_30fps_normal.mp4";
+
+	public static final String VIDEO_URL = "http://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_720p_h264.mov";
 	private Button                                            m_startAppButton;
 	private Button                                            m_pausePlayButton;
 	private Button                                            m_stopAppButton;
@@ -31,14 +31,16 @@ public class FragmentDefaultReceiver extends Fragment
 	private String TAG = "DefaultReceiverFragment";
 
 
-	@Override public View onCreateView(
+	@Override
+	public View onCreateView(
 		final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState
 	)
 	{
 		return inflater.inflate( R.layout.fragment_default, container, false );
 	}
 
-	@Override public void onViewCreated( final View view, final Bundle savedInstanceState )
+	@Override
+	public void onViewCreated( final View view, final Bundle savedInstanceState )
 	{
 		m_startAppButton = (Button) view.findViewById( R.id.btn_start_app );
 		m_pausePlayButton = (Button) view.findViewById( R.id.btn_pause_play );
@@ -48,26 +50,35 @@ public class FragmentDefaultReceiver extends Fragment
 		m_startAppButton.setOnClickListener(
 			new View.OnClickListener()
 			{
-				@Override public void onClick( final View v )
+				@Override
+				public void onClick( final View v )
 				{
 					startDefaultReciever();
 				}
 			}
 		);
 
-		m_pausePlayButton.setOnClickListener( new View.OnClickListener() {
-			                                      @Override public void onClick( final View v )
-			                                      {
-				                                      pauseOrPlay();
-			                                      }
-		                                      } );
+		m_pausePlayButton.setOnClickListener(
+			new View.OnClickListener()
+			{
+				@Override
+				public void onClick( final View v )
+				{
+					pauseOrPlay();
+				}
+			}
+		);
 
-		m_stopAppButton.setOnClickListener( new View.OnClickListener() {
-			                                    @Override public void onClick( final View v )
-			                                    {
-				                                    stopMedia();
-			                                    }
-		                                    } );
+		m_stopAppButton.setOnClickListener(
+			new View.OnClickListener()
+			{
+				@Override
+				public void onClick( final View v )
+				{
+					stopMedia();
+				}
+			}
+		);
 
 		mRemoteMediaPlayer = new RemoteMediaPlayer();
 
@@ -104,8 +115,30 @@ public class FragmentDefaultReceiver extends Fragment
 
 	private void stopMedia()
 	{
+//		mRemoteMediaPlayer.requestStatus( m_googleApiClient ).setResultCallback(
+//			new ResultCallback<RemoteMediaPlayer.MediaChannelResult>()
+//
+//			{
+//				@Override
+//				public void onResult( final RemoteMediaPlayer.MediaChannelResult result )
+//				{
+//					if ( !result.getStatus().isSuccess() )
+//					{
+//						Log.e( TAG, "Failed to request status." );
+//					}
+//
+//
+//					final MediaStatus mediaStatus = mRemoteMediaPlayer.getMediaStatus();
+//					mRemoteMediaPlayer.stop( m_googleApiClient );
+//
+//				}
+//			}
+//		);
 
-			mRemoteMediaPlayer.stop( m_googleApiClient );
+
+		Cast.CastApi.stopApplication(
+			m_googleApiClient
+		);
 	}
 
 	private void pauseOrPlay()
@@ -113,7 +146,8 @@ public class FragmentDefaultReceiver extends Fragment
 		mRemoteMediaPlayer.requestStatus( m_googleApiClient ).setResultCallback(
 			new ResultCallback<RemoteMediaPlayer.MediaChannelResult>()
 			{
-				@Override public void onResult(
+				@Override
+				public void onResult(
 					final RemoteMediaPlayer.MediaChannelResult mediaChannelResult
 				)
 				{
@@ -196,8 +230,9 @@ public class FragmentDefaultReceiver extends Fragment
 									 .build();
 									try
 									{
-										mRemoteMediaPlayer.load( m_googleApiClient, mediaInfo,
-										                         true ).setResultCallback(
+										mRemoteMediaPlayer.load(
+											m_googleApiClient, mediaInfo, true
+										).setResultCallback(
 											new ResultCallback<RemoteMediaPlayer.MediaChannelResult>()
 											{
 												@Override
